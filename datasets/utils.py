@@ -18,13 +18,14 @@ def font2image(input_file, output_paths, characters, size):
     if not os.path.exists(output_path):
         os.mkdir(output_path)
         
-    AZ = [chr(i) for i in range(0x0041,0x005A+1)]    
+    AZ = [chr(i) for i in range(0x0041,0x005A+1)] 
+    UPCYR = [chr(i) for i in range(ord('А'), ord('А') + 32)] + ["Ё"]
     file_sizes=[]    
     for word in characters:
         font = pygame.font.Font(input_file, size)
         rtext = font.render(word, True, (0, 0, 0), (255, 255, 255))
         
-        if word in AZ:      # for uppercase letter
+        if word in AZ or word in UPCYR:      # for uppercase letter
             word = word+'+'
         pygame.image.save(rtext, os.path.join(output_path,word+".png"))
         
@@ -145,8 +146,9 @@ def remove_empty_floder(path):
 # check current font exists the given characters or not 
 def check_image_exists(path, characters):
     AZ = [chr(i) for i in range(0x0041,0x005A+1)]  
+    UPCYR = [chr(i) for i in range(ord('А'), ord('А') + 32)] + ["Ё"]
     for word in characters:
-        if word in AZ:      
+        if word in AZ or word in UPCYR:      
             word = word+'+'
         image = word+'.png'
         image_path = os.path.join(path, image)
