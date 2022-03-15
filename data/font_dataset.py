@@ -30,12 +30,12 @@ class FontDataset(BaseDataset):
         Parameters:
             opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions
         """
-        if opt.direction=="english2chinese":
-            self.content_language = 'chinese'
+        if opt.direction=="english2russian":
+            self.content_language = 'russian'
             self.style_language = 'english'
         else:
             self.content_language = 'english'
-            self.style_language = 'chinese'
+            self.style_language = 'russian'
         BaseDataset.__init__(self, opt)
         self.dataroot = os.path.join(opt.dataroot, opt.phase, self.content_language)  # get the image directory
         self.paths = sorted(make_dataset(self.dataroot, opt.max_dataset_size))  # get image paths
@@ -45,7 +45,7 @@ class FontDataset(BaseDataset):
         self.img_size = opt.load_size
         
     def __getitem__(self, index):
-        # get content path and corresbonding stlye paths
+        # get content path and corresbonding style paths
         gt_path = self.paths[index]
         parts = gt_path.split(os.sep)
         style_paths = self.get_style_paths(parts)
