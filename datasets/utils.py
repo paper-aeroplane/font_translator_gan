@@ -20,9 +20,9 @@ def font2image(input_file, output_paths, characters, size):
         
     AZ = [chr(i) for i in range(0x0041,0x005A+1)] 
     UPCYR = [chr(i) for i in range(ord('А'), ord('А') + 32)] + ["Ё"]
-    file_sizes=[]    
-    for word in characters:
-        font = pygame.font.Font(input_file, size)
+    file_sizes=[]
+    font = pygame.font.Font(input_file, size)
+    for word in characters:        
         rtext = font.render(word, True, (0, 0, 0), (255, 255, 255))
         
         if word in AZ or word in UPCYR:      # for uppercase letter
