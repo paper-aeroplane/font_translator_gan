@@ -5,7 +5,7 @@ import ntpath
 import time
 from . import util, html
 from subprocess import Popen, PIPE
-
+import matplotlib.pyplot as plt
 
 
 def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
@@ -87,7 +87,8 @@ class Visualizer():
             epoch (int) - - the current epoch
             save_result (bool) - - if save the current results to an HTML file
         """
-        
+        _, axs = plt.subplots(1, 8, sharey = True)
+        cur_subplot = 0
         if self.use_html and (save_result or not self.saved):  # save images to an HTML file if they haven't been saved.
             self.saved = True
             # save images to the disk
@@ -95,6 +96,11 @@ class Visualizer():
                 image_numpy = util.tensor2im(image)
                 img_path = os.path.join(self.img_dir, 'epoch%.3d_%s.png' % (epoch, label))
                 util.save_image(image_numpy, img_path)
+                axs[cur_subplot].imshow(image_numpy, interpolation='nearest')
+                axs[cur_subplot].axis('off')
+                axs[cur_subplot].set_title(label[:label.find('_')])
+                cur_subplot += 1
+            plt.show()
 
             # update website
             webpage = html.HTML(self.web_dir, 'Experiment name = %s' % self.name, refresh=1)
