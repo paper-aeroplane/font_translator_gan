@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 
 def train_classifier(mode='style', epochs=10):
     dataset = ClassifierDataset(mode)
-    dataloader = DataLoader(dataset, batch_size=512, shuffle=True, num_workers=8)
+    dataloader = DataLoader(dataset, batch_size=512, shuffle=True, num_workers=2)
     net = Classifier(mode, dataset.num_classes, isTrain=True, epochs=epochs)
     print('total images:{}'.format(len(dataset)))
     for epoch in range(epochs):
