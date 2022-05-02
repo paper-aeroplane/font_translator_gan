@@ -5,7 +5,7 @@ import torch
 import os
 
 class Classifier():
-    def __init__(self, mode, num_classes, isTrain=False, save_dir='evaluator/checkpoints', gpu_ids=[0, 1], epochs=10):
+    def __init__(self, mode, num_classes, isTrain=False, save_dir='evaluator/checkpoints', gpu_ids=[0], epochs=10):
         self.gpu_ids = gpu_ids
         self.mode = mode
         self.save_dir = save_dir
@@ -21,8 +21,7 @@ class Classifier():
         if len(gpu_ids) > 0:
             assert(torch.cuda.is_available())
             self.resnet.to(gpu_ids[0])
-            if len(gpu_ids) > 1: # проверка на несколько видеокарт
-                self.resnet = torch.nn.DataParallel(self.resnet, gpu_ids)  # multi-GPUs
+            self.resnet = torch.nn.DataParallel(self.resnet, gpu_ids)  # multi-GPUs
         if isTrain:            
             self.criterion = nn.CrossEntropyLoss()
             self.optimizer = optim.Adam(self.resnet.parameters(), lr=0.001, betas=(0.5, 0.999))
