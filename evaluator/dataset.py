@@ -6,12 +6,12 @@ from PIL import Image
 
 class ClassifierDataset(Dataset):
     def __init__(self, mode):   
-        path_chinese1 = 'datasets/font/train/chinese'
+        path_russian1 = 'datasets/font/train/russian'
         path_english1 = 'datasets/font/train/english'
-        path_chinese2 = 'datasets/font/test_unknown_style/chinese'
+        path_russian2 = 'datasets/font/test_unknown_style/russian'
         path_english2 = 'datasets/font/test_unknown_style/english'
-        path_chinese3 = 'datasets/font/test_unknown_content/chinese'
-        roots = [path_chinese1, path_english1, path_chinese2, path_english2, path_chinese3]         
+        #path_chinese3 = 'datasets/font/test_unknown_content/chinese'
+        roots = [path_russian1, path_english1, path_russian2, path_english2]#, path_chinese3         
         if mode=='style': # build a style classifier
             part = -2     # choose which part as label
         elif mode=='content':
