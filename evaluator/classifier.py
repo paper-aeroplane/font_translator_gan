@@ -21,7 +21,8 @@ class Classifier():
         if len(gpu_ids) > 0:
             assert(torch.cuda.is_available())
             self.resnet.to(gpu_ids[0])
-            self.resnet = torch.nn.DataParallel(self.resnet, gpu_ids)  # multi-GPUs
+            if len(gpu_ids) > 1: # проверка на несколько видеокарт
+                self.resnet = torch.nn.DataParallel(self.resnet, gpu_ids)  # multi-GPUs
         if isTrain:            
             self.criterion = nn.CrossEntropyLoss()
             self.optimizer = optim.Adam(self.resnet.parameters(), lr=0.001, betas=(0.5, 0.999))
