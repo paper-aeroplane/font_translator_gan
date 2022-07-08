@@ -33,6 +33,9 @@ class FontDataset(BaseDataset):
         if opt.direction=="english2russian":
             self.content_language = 'russian'
             self.style_language = 'english'
+        elif opt.direction=="english2extcyr":
+            self.content_language = 'extcyr'
+            self.style_language = 'english'
         else:
             self.content_language = 'english'
             self.style_language = 'russian'
