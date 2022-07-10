@@ -40,7 +40,10 @@ class FontDataset(BaseDataset):
             self.content_language = 'english'
             self.style_language = 'russian'
         BaseDataset.__init__(self, opt)
-        self.dataroot = os.path.join(opt.dataroot, opt.phase, self.content_language)  # get the image directory
+        if (opt.phase == 'generate'):
+          self.dataroot = os.path.join(opt.dataroot, opt.phase, 'source', self.content_language) 
+        else:
+          self.dataroot = os.path.join(opt.dataroot, opt.phase, self.content_language)  # get the image directory
         self.paths = sorted(make_dataset(self.dataroot, opt.max_dataset_size))  # get image paths
         self.style_channel = opt.style_channel
         self.transform = transforms.Compose([transforms.ToTensor(),
@@ -56,9 +59,14 @@ class FontDataset(BaseDataset):
         # load and transform images
         content_image = self.load_image(content_path)
         gt_image = self.load_image(gt_path)
+        if self.opt.phase == "train":
+          image_paths = gt_path
+        else:
+          fontname = style_paths[0].split(os.sep)[-2]
+          image_paths = os.path.join(fontname, parts[-1])
         style_image = torch.cat([self.load_image(style_path) for style_path in style_paths], 0)
         return {'gt_images':gt_image, 'content_images':content_image, 'style_images':style_image,
-                'style_image_paths':style_paths, 'image_paths':gt_path}
+                'style_image_paths':style_paths, 'image_paths':image_paths}
     
     def __len__(self):
         """Return the total number of images in the dataset."""
@@ -70,9 +78,13 @@ class FontDataset(BaseDataset):
         return image
         
     def get_style_paths(self, parts):
-        english_font_path = os.path.join(parts[0], parts[1], parts[2], parts[3], self.style_language, parts[5])
+        if self.opt.phase == 'generate':
+          target_font_name = os.listdir(os.path.join(parts[0], parts[1], parts[2], parts[3], self.style_language))[0]
+        else:
+          target_font_name = parts[5]
+        english_font_path = os.path.join(parts[0], parts[1], parts[2], parts[3], self.style_language, target_font_name)
         english_paths = [os.path.join(english_font_path, letter) for letter in random.sample(os.listdir(english_font_path), self.style_channel)]
         return english_paths
     
     def get_content_path(self, parts):
-        return os.path.join(parts[0], parts[1], parts[2], parts[3], 'source', parts[-1])
+        return os.path.join(parts[0], parts[1], parts[2], parts[3], 'source', self.content_language, parts[-1])
