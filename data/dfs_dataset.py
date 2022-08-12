@@ -25,7 +25,7 @@ class DFSDataset(BaseDataset):
         self.style_channel = opt.style_channel
         self.img_size = opt.load_size
         self.phase = opt.phase
-        self.table = {'english':'russian', 'chinese':'russian', 'english':'extcyr'}
+        self.table = {'english':'russian', 'russian':'english', 'english':'extcyr'}
         self.transform = transforms.Compose([transforms.ToTensor(),
                                              transforms.Normalize(mean = (0.5), std = (0.5))])
         
