@@ -2,7 +2,7 @@ import os
 from options.test_options import TestOptions
 from data import create_dataset
 from models import create_model
-from util.visualizer import save_images
+from util.visualizer import save_result_images, save_images
 from util import html
 
 
@@ -17,10 +17,14 @@ if __name__ == '__main__':
     model.setup(opt)               # regular setup: load and print networks; create schedulers
     # create a website
     web_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))  # define the website directory
+    # папка для изображений
+    img_dir = os.path.join(opt.results_dir, opt.name)
     if opt.load_iter > 0:  # load_iter is 0 by default
         web_dir = '{:s}_iter{:d}'.format(web_dir, opt.load_iter)
-    print('creating web directory', web_dir)
-    webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
+    print('creating image directory', img_dir)
+    if not os.path.exists(img_dir):
+        os.makedirs(img_dir)
+    #webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
     # test with eval mode. This only affects layers like batchnorm and dropout.
     if opt.eval:
         model.eval()
@@ -33,5 +37,6 @@ if __name__ == '__main__':
         img_path = model.get_image_paths()     # get image paths
         if i % 1000 == 0:  # save images to an HTML file
             print('processing (%04d)-th image... %s' % (i, img_path))
-        save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
-    webpage.save()  # save the HTML
+        save_result_images(img_dir, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
+        #save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
+    #webpage.save()  # save the HTML
