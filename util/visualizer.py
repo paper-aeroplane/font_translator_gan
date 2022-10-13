@@ -7,6 +7,28 @@ from . import util, html
 from subprocess import Popen, PIPE
 import matplotlib.pyplot as plt
 
+def save_result_images(image_dir, visuals, image_path, aspect_ratio=1.0, width=256):
+    """Сохраняет только сгенерированные изображения.
+        image_dir (str)          -- полный путь до папки, в которую сохранять изображения
+        visuals (OrderedDict)    -- an ordered dictionary that stores (name, images (either tensor or numpy) ) pairs
+        image_path (str)         -- the string is used to create image paths
+        aspect_ratio (float)     -- the aspect ratio of saved images
+        width (int)              -- the images will be resized to width x width
+    """
+    parts = image_path[0].split(os.sep)
+    file_name = f'{os.path.splitext(parts[-1])[0]}.png'
+    parent_dir = parts[-2]
+    #name = parent_dir+'|'+file_name
+
+    is_first = True
+    for label, im_data in visuals.items():
+        if is_first: 
+            is_first = False
+            continue        
+        im = util.tensor2im(im_data)
+        #image_name = '%s|%s.png' % (name, label)
+        save_path = os.path.join(image_dir, file_name)
+        util.save_image(im, save_path, aspect_ratio=aspect_ratio)
 
 def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
     """Save images to the disk.
