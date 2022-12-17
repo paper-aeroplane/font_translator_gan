@@ -26,7 +26,9 @@ def font2image(input_file, output_paths, characters, size):
         rtext = font.render(word, True, (0, 0, 0), (255, 255, 255))
         
         if word in AZ or word in UPCYR:      # for uppercase letter
-            word = word+'+'
+            word = word.encode().hex().upper()+'+'
+        else:
+            word = word.encode().hex().upper()
         pygame.image.save(rtext, os.path.join(output_path,word+".png"))
         
     remove_duplicated_images(output_path)
