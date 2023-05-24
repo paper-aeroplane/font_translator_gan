@@ -36,6 +36,9 @@ class FontDataset(BaseDataset):
         elif opt.direction=="english2extcyr":
             self.content_language = 'extcyr'
             self.style_language = 'english'
+        elif opt.direction=="english2special":
+            self.content_language = 'special'
+            self.style_language = 'english'
         else:
             self.content_language = 'english'
             self.style_language = 'russian'
@@ -46,7 +49,8 @@ class FontDataset(BaseDataset):
           self.dataroot = os.path.join(opt.dataroot, opt.phase, self.content_language)  # get the image directory
         self.paths = sorted(make_dataset(self.dataroot, opt.max_dataset_size))  # get image paths
         self.style_channel = opt.style_channel
-        self.transform = transforms.Compose([transforms.ToTensor(),
+        self.transform = transforms.Compose([transforms.Resize((opt.load_size, opt.load_size)),
+                                             transforms.ToTensor(),
                                              transforms.Normalize(mean = (0.5), std = (0.5))])
         self.img_size = opt.load_size
         
